@@ -12,6 +12,7 @@ int somaPosition(int vet[],int inicio, int fim){
 }
 /* ============== ============== ============== */
 
+
 int bruteForce(int *dist, int n, int k){
     int *s;
     s = malloc((n+1) *sizeof(int));
