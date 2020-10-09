@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 /* ============== FUNÇÕES AUXILIARES ============== */
-int somaPosition(int vet[],int inicio, int fim){
+int sumPosition(int vet[],int inicio, int fim){
     int value =0;
     for(int i=inicio; i<fim; i++){
         value+=vet[i];
@@ -11,7 +11,6 @@ int somaPosition(int vet[],int inicio, int fim){
     return value;
 }
 /* ============== ============== ============== */
-
 
 int bruteForce(int *dist, int n, int k){
     int *s;
@@ -37,9 +36,9 @@ int bruteForce(int *dist, int n, int k){
             int aux[tam+1];
             int j=0;
                 for( j=0; j<tam; j++){
-                    aux[j] = somaPosition(dist,s[j],s[j+1]);
+                    aux[j] = sumPosition(dist,s[j],s[j+1]);
                 }
-                aux[j] = somaPosition(dist,s[j],k+1);
+                aux[j] = sumPosition(dist,s[j],k+1);
                 int maxValueVet = 0;
                 for(int j=0; j<tam+1; j++){
                    if(maxValueVet<aux[j]) maxValueVet = aux[j];
