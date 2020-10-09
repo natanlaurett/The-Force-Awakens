@@ -1,5 +1,56 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+/* ============== FUNÇÕES AUXILIARES ============== */
+int somaPosition(int vet[],int inicio, int fim){
+    int value =0;
+    for(int i=inicio; i<fim; i++){
+        value+=vet[i];
+    }
+    //printf("%d ",value);
+    return value;
+}
+/* ============== ============== ============== */
+
+int bruteForce(int *dist, int n, int k){
+    int *s;
+    s = malloc((n+1) *sizeof(int));
+    s[0] = 0;
+    int tam=0;
+    int result = 99999;
+    while (1)
+    {
+        if(s[tam]<k){
+            s[tam+1] = s[tam]+1;
+            tam+=1;
+        }else{
+            s[tam-1] +=1;
+            tam-=1;
+        }
+
+        if(tam==0){
+            break;
+        }
+
+        if(tam+1==k){
+            int aux[tam+1];
+            int j=0;
+                for( j=0; j<tam; j++){
+                    aux[j] = somaPosition(dist,s[j],s[j+1]);
+                }
+                aux[j] = somaPosition(dist,s[j],k+1);
+                int maxValueVet = 0;
+                for(int j=0; j<tam+1; j++){
+                   if(maxValueVet<aux[j]) maxValueVet = aux[j];
+                }
+                if(maxValueVet<result){
+                    result = maxValueVet;
+                }   
+        }
+    }
+    free(s);
+    return result;
+}
 
 int AG(int *dist, int n, int k){
     int cont, cont2, cont3, larg = 0;
@@ -50,7 +101,7 @@ int main(){
             scanf("%d", &aux);
             dist[cont2] = aux;
         }
-
         printf("\n%d\n", AG(dist, n, k));
+        printf("\n%d\n", bruteForce(dist, n, k));
     }
 }
