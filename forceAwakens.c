@@ -57,8 +57,8 @@ int AG(int *dist, int n, int k){
 
     for (cont = 0; cont <=n; cont++)
         if (dist[cont] > larg)
-            larg = dist[cont] + 1;
-    
+            larg = dist[cont];
+    larg *= 2;
     for (cont = k + 1; cont <= n; cont ++){
         int edge = dist[cont];
         int small = larg, smallId = -1;
@@ -139,8 +139,8 @@ int main(){
             scanf("%d", &aux);
             dist[cont2] = aux;
         }
-        printf("\n%d\n", AG(dist, n, k));
+        //printf("\n%d\n", AG(dist, n, k));
         //printf("\n%d\n", BF(dist, n, k));
-        //printf("\n%d\n", PD(dist, n, k));
+        printf("\n%d\n", PD(dist, n, k));
     }
 }
