@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 /* ============== FUNÇÕES AUXILIARES ============== */
 int sumPosition(int vet[],int inicio, int fim){
@@ -12,14 +13,13 @@ int sumPosition(int vet[],int inicio, int fim){
 }
 /* ============== ============== ============== */
 
-int bruteForce(int *dist, int n, int k){
+int BF(int *dist, int n, int k){
     int *s;
     s = malloc((n+1) *sizeof(int));
     s[0] = 0;
     int tam=0;
     int result = 99999;
-    while (1)
-    {
+    while (1){
         if(s[tam]<k){
             s[tam+1] = s[tam]+1;
             tam+=1;
@@ -28,24 +28,20 @@ int bruteForce(int *dist, int n, int k){
             tam-=1;
         }
 
-        if(tam==0){
+        if(tam==0)
             break;
-        }
-
+        
         if(tam+1==k){
             int aux[tam+1];
             int j=0;
-                for( j=0; j<tam; j++){
-                    aux[j] = sumPosition(dist,s[j],s[j+1]);
-                }
-                aux[j] = sumPosition(dist,s[j],k+1);
-                int maxValueVet = 0;
-                for(int j=0; j<tam+1; j++){
-                   if(maxValueVet<aux[j]) maxValueVet = aux[j];
-                }
-                if(maxValueVet<result){
-                    result = maxValueVet;
-                }   
+            for( j=0; j<tam; j++)
+                aux[j] = sumPosition(dist,s[j],s[j+1]);
+            aux[j] = sumPosition(dist,s[j],k+1);
+            int maxValueVet = 0;
+            for(int j=0; j<tam+1; j++)
+                if(maxValueVet<aux[j]) maxValueVet = aux[j];
+            if(maxValueVet<result)
+                result = maxValueVet;       
         }
     }
     free(s);
@@ -89,6 +85,48 @@ int AG(int *dist, int n, int k){
     return larg;
 }
 
+int PD(int *dist, int n, int k){
+    int aux[n + 1][k + 1];
+    int cont, cont2, max;
+    for (cont = 0; cont <= n; cont++)
+        aux[cont][0] = INT_MAX;
+
+    max = dist[0];
+    for (cont = 1; cont <= k; cont++){
+        if (dist[cont] > max)
+            max = dist[cont];
+        aux[cont][cont] = max;
+    }
+
+    for (cont = 1; cont <= k; cont++){
+        for (cont2 = k + 1; cont2 <= n; cont2 ++){
+            int prev1, prev2;
+
+            if (dist[cont2] > aux[cont2 - 1][cont - 1])
+                prev1 = dist[cont2];
+            else
+                prev1 = aux[cont2 - 1][cont - 1];
+
+            if (dist[cont2] > aux[cont2][cont - 1])
+                prev2 = dist[cont2];
+            else
+                prev2 = aux[cont2][cont - 1];
+
+            if (prev1 < prev2)
+                if (prev1 < aux[cont2 - 1][cont])
+                    aux[cont2][cont] = prev1;
+                else
+                    aux[cont2][cont] = aux[cont2 - 1][cont];
+            else 
+                if (prev2 < aux[cont2 - 1][cont])
+                    aux[cont2][cont] = prev2;
+                else
+                    aux[cont2][cont] = aux[cont2 - 1][cont];
+        }
+    }
+    return aux[n][k];
+}
+
 int main(){
     int t, cont;
     scanf("%d", &t);
@@ -102,6 +140,7 @@ int main(){
             dist[cont2] = aux;
         }
         printf("\n%d\n", AG(dist, n, k));
-        printf("\n%d\n", bruteForce(dist, n, k));
+        //printf("\n%d\n", BF(dist, n, k));
+        //printf("\n%d\n", PD(dist, n, k));
     }
 }
