@@ -86,45 +86,7 @@ int AG(int *dist, int n, int k){
 }
 
 int PD(int *dist, int n, int k){
-    int aux[n + 1][k + 1];
-    int cont, cont2, max;
-    for (cont = 0; cont <= n; cont++)
-        aux[cont][0] = INT_MAX;
-
-    max = dist[0];
-    for (cont = 1; cont <= k; cont++){
-        if (dist[cont] > max)
-            max = dist[cont];
-        aux[cont][cont] = max;
-    }
-
-    for (cont = 1; cont <= k; cont++){
-        for (cont2 = k + 1; cont2 <= n; cont2 ++){
-            int prev1, prev2;
-
-            if (dist[cont2] > aux[cont2 - 1][cont - 1])
-                prev1 = dist[cont2];
-            else
-                prev1 = aux[cont2 - 1][cont - 1];
-
-            if (dist[cont2] > aux[cont2][cont - 1])
-                prev2 = dist[cont2];
-            else
-                prev2 = aux[cont2][cont - 1];
-
-            if (prev1 < prev2)
-                if (prev1 < aux[cont2 - 1][cont])
-                    aux[cont2][cont] = prev1;
-                else
-                    aux[cont2][cont] = aux[cont2 - 1][cont];
-            else 
-                if (prev2 < aux[cont2 - 1][cont])
-                    aux[cont2][cont] = prev2;
-                else
-                    aux[cont2][cont] = aux[cont2 - 1][cont];
-        }
-    }
-    return aux[n][k];
+   
 }
 
 int main(){
