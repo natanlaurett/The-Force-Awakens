@@ -49,6 +49,24 @@ int BF(int *dist, int n, int k){
 }
 
 int AG(int *dist, int n, int k){
+    int cont, aux, aux2, max;
+    aux = 0; aux2 = 0; max = 0;
+    for (cont = 0; cont <= n; cont++){
+        aux += dist[cont];
+    }
+    aux /= (k + 2);
+    for (cont = 0; cont <= n; cont++){
+        aux2 += dist[cont];
+        if (aux2 >= aux){
+            if (aux2 > max)
+                max = aux2;
+            aux2 = 0;
+        }
+    }
+    return max;
+}
+
+int PD(int *dist, int n, int k){
     int cont, cont2, cont3, larg = 0;
     int aux[k + 1];
     for (cont = 0; cont <= k; cont++){
@@ -85,10 +103,6 @@ int AG(int *dist, int n, int k){
     return larg;
 }
 
-int PD(int *dist, int n, int k){
-   
-}
-
 int main(){
     int t, cont;
     scanf("%d", &t);
@@ -101,8 +115,8 @@ int main(){
             scanf("%d", &aux);
             dist[cont2] = aux;
         }
-        //printf("\n%d\n", AG(dist, n, k));
-        //printf("\n%d\n", BF(dist, n, k));
-        printf("\n%d\n", PD(dist, n, k));
+        printf("\n%d", AG(dist, n, k));
+        //printf("\n%d", BF(dist, n, k));
+        //printf("\n%d\n", PD(dist, n, k));
     }
 }
