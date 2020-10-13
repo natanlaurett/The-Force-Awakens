@@ -50,20 +50,27 @@ int BF(int *dist, int n, int k){
 }
 
 int AG(int *dist, int n, int k){
-    int cont, aux, aux2, max;
-    aux = 0; aux2 = 0; max = 0;
+    int cont, aux, aux2, contdiv, max;
+    aux = 0; aux2 = 0; contdiv = 0; max = 0;
     for (cont = 0; cont <= n; cont++){
         aux += dist[cont];
     }
-    aux /= (k + 2);
+    aux /= (k + 1);
     for (cont = 0; cont <= n; cont++){
-        aux2 += dist[cont];
-        if (aux2 >= aux){
-            if (aux2 > max)
-                max = aux2;
-            aux2 = 0;
-        }
+        if (aux2 + dist[cont] > aux){
+            if (contdiv < k){
+                if (aux2 > max)
+                    max = aux2;
+                aux2 = dist[cont];
+                contdiv++;
+            }else
+                aux2 += dist[cont];            
+        }else
+            aux2 += dist[cont];
     }
+    if (aux2 > max)
+        max = aux2;
+        
     return max;
 }
 
@@ -77,18 +84,21 @@ int PD(int *dist, int n, int k){
     for (cont = 0; cont <=n; cont++)
         if (dist[cont] > larg)
             larg = dist[cont];
-    larg *= 2;
+    larg *= n;
+    printf("%d\n", larg);
     for (cont = k + 1; cont <= n; cont ++){
         int edge = dist[cont];
         int small = larg, smallId = -1;
         for (cont2 = 1; cont2 <= k; cont2++){
+            printf("%d ", cont);
             if (aux[cont2] + aux[cont2 - 1] < small){
+                printf("%d %d\n", aux[cont2 - 1], aux[cont2]);
                 small = aux[cont2] + aux[cont2 - 1];
                 smallId = cont2 - 1;
             }
         }
-        if (aux[cont2] + edge < small)
-            aux[cont2] = aux[cont2] + edge;
+        if (aux[k] + edge < small)
+            aux[k] = aux[k] + edge;
         else{
             aux[smallId] += aux[smallId + 1];
             for (cont3 = smallId + 1; cont3 < k; cont3++)
@@ -125,8 +135,8 @@ int main(){
         }
 
         printf("%d\t", PD(dist, n, k));
-        printf("%d\t", AG(dist, n, k));
-        printf("%d\n", BF(dist, n, k));
+        //printf("%d\t", AG(dist, n, k));
+        //printf("%d\n", BF(dist, n, k));
     }
     return 0;
 }
