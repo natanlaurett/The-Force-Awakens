@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 /* ============== FUNÇÕES AUXILIARES ============== */
 int sumPosition(int vet[],int inicio, int fim){
@@ -12,36 +11,38 @@ int sumPosition(int vet[],int inicio, int fim){
     return value;
 }
 /* ============== ============== ============== */
-
 int BF(int *dist, int n, int k){
     int *s;
     s = malloc((n+1) *sizeof(int));
     s[0] = 0;
+
     int tam=0;
     int result = 99999;
     while (1){
-        if(s[tam]<k){
+        if(s[tam]<n){
             s[tam+1] = s[tam]+1;
             tam+=1;
         }else{
             s[tam-1] +=1;
             tam-=1;
         }
-
         if(tam==0)
             break;
-        
-        if(tam+1==k){
+
+        if(tam==k){
             int aux[tam+1];
             int j=0;
-            for( j=0; j<tam; j++)
+            for( j=0; j<tam; j++){
                 aux[j] = sumPosition(dist,s[j],s[j+1]);
-            aux[j] = sumPosition(dist,s[j],k+1);
+            }
+            aux[j] = sumPosition(dist,s[j],n+1);
             int maxValueVet = 0;
-            for(int j=0; j<tam+1; j++)
-                if(maxValueVet<aux[j]) maxValueVet = aux[j];
-            if(maxValueVet<result)
-                result = maxValueVet;       
+            for(int r=0; r<j+1; r++){
+                if(maxValueVet<aux[r]) maxValueVet = aux[r];
+            }
+            if(maxValueVet<result){
+                result = maxValueVet;
+            }      
         }
     }
     free(s);
@@ -104,19 +105,28 @@ int PD(int *dist, int n, int k){
 }
 
 int main(){
+    FILE* arqTeste;
+    arqTeste = fopen("testes.txt","r");
     int t, cont;
-    scanf("%d", &t);
+    fscanf(arqTeste,"%d",&t);
+    //scanf("%d", &t);
     for (cont = 0; cont < t; cont++) {
         int n, k, cont2;
-        scanf("%d %d", &n, &k);
+        fscanf(arqTeste,"%d %d",&n, &k);
+        //scanf("%d %d", &n, &k);
         int dist[n + 1];
-        for (cont2 = 0; cont2 <= n; cont2++){
-            int aux;
-            scanf("%d", &aux);
-            dist[cont2] = aux;
+        /*for (cont2 = n; cont2 >= 0; cont2--){
+            //fscanf(arqTeste,"%d",&aux);
+            //scanf("%d", &aux);
+            dist[cont2] = cont2+1;
+        }*/
+        for(cont2=0; cont2<=n; cont2++){
+            dist[cont2] = cont2+1;
         }
-        printf("\n%d", AG(dist, n, k));
-        //printf("\n%d", BF(dist, n, k));
-        //printf("\n%d\n", PD(dist, n, k));
+
+        printf("%d\t", PD(dist, n, k));
+        printf("%d\t", AG(dist, n, k));
+        printf("%d\n", BF(dist, n, k));
     }
+    return 0;
 }
