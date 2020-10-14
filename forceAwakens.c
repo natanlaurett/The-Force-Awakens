@@ -52,20 +52,24 @@ int BF(int *dist, int n, int k){
 int AG(int *dist, int n, int k){
     int cont, aux, aux2, contdiv, max;
     aux = 0; aux2 = 0; contdiv = 0; max = 0;
-    for (cont = 0; cont <= n; cont++){
+    for (cont = 0; cont <= n; cont++)
         aux += dist[cont];
-    }
+
     aux /= (k + 1);
     for (cont = 0; cont <= n; cont++){
-        printf("%d %d\n", aux2, dist[cont]);
         if (aux2 + dist[cont] > aux && contdiv < k){
-            
-            if (aux2 > max){
-                max = aux2;
-            }
-            aux2 = dist[cont];
-            contdiv++;
-                   
+            if (aux2 + dist[cont] - aux <= aux - aux2){
+                aux2 += dist[cont];
+                 if (aux2 > max)
+                    max = aux2;
+                aux2 = 0;
+                contdiv++;
+            }else{
+                if (aux2 > max)
+                    max = aux2;
+                aux2 = dist[cont];
+                contdiv++;
+            }   
         }else
             aux2 += dist[cont];
     }
@@ -102,26 +106,26 @@ int main(){
     FILE* arqTeste;
     arqTeste = fopen("testes.txt","r");
     int t, cont;
-    //fscanf(arqTeste,"%d",&t);
-    scanf("%d", &t);
+    fscanf(arqTeste,"%d",&t);
+    //scanf("%d", &t);
     for (cont = 0; cont < t; cont++) {
         int n, k, cont2;
-        //fscanf(arqTeste,"%d %d",&n, &k);
-        scanf("%d %d", &n, &k);
+        fscanf(arqTeste,"%d %d",&n, &k);
+        //scanf("%d %d", &n, &k);
         int dist[n + 1];
-        for (cont2 = n; cont2 >= 0; cont2--){
+        /*for (cont2 = n; cont2 >= 0; cont2--){
             //fscanf(arqTeste,"%d",&aux);
             int aux;
             scanf("%d", &aux);
             dist[cont2] = aux;
-        }
-        /*for(cont2=0; cont2<=n; cont2++){
-            dist[cont2] = cont2+1;
         }*/
+        for(cont2=0; cont2<=n; cont2++){
+            dist[cont2] = cont2+1;
+        }
 
-        //k = 6;
+        k = 7;
         printf("%d\t", PD(dist, n, k));
-        //printf("%d\t", AG(dist, n, k));
+        printf("%d\t", AG(dist, n, k));
         printf("%d\n", BF(dist, n, k));
     }
     return 0;
