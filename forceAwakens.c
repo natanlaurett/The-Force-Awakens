@@ -57,14 +57,15 @@ int AG(int *dist, int n, int k){
     }
     aux /= (k + 1);
     for (cont = 0; cont <= n; cont++){
-        if (aux2 + dist[cont] > aux){
-            if (contdiv < k){
-                if (aux2 > max)
-                    max = aux2;
-                aux2 = dist[cont];
-                contdiv++;
-            }else
-                aux2 += dist[cont];            
+        printf("%d %d\n", aux2, dist[cont]);
+        if (aux2 + dist[cont] > aux && contdiv < k){
+            
+            if (aux2 > max){
+                max = aux2;
+            }
+            aux2 = dist[cont];
+            contdiv++;
+                   
         }else
             aux2 += dist[cont];
     }
@@ -74,69 +75,54 @@ int AG(int *dist, int n, int k){
     return max;
 }
 
+int PD_rec(int *dist, int n, int k, int aux, int max, int start){
+    if (start > n)
+        return max;
+    int res1, res2, arg;
+
+    aux += dist[start];
+    if (aux > max)
+        max = aux;
+    res1 = PD_rec(dist, n, k, aux, max, start + 1);
+
+    if (k > 0){
+        aux = 0;
+        res2 = PD_rec(dist, n, k - 1, aux, max, start + 1);
+        if (res2 < res1)
+            return res2;
+    }
+    return res1;
+}
+
 int PD(int *dist, int n, int k){
-    int cont, cont2, cont3, larg = 0;
-    int aux[k + 1];
-    for (cont = 0; cont <= k; cont++){
-        aux[cont] = dist[cont];
-    }
-
-    for (cont = 0; cont <=n; cont++)
-        if (dist[cont] > larg)
-            larg = dist[cont];
-    larg *= n;
-    printf("%d\n", larg);
-    for (cont = k + 1; cont <= n; cont ++){
-        int edge = dist[cont];
-        int small = larg, smallId = -1;
-        for (cont2 = 1; cont2 <= k; cont2++){
-            printf("%d ", cont);
-            if (aux[cont2] + aux[cont2 - 1] < small){
-                printf("%d %d\n", aux[cont2 - 1], aux[cont2]);
-                small = aux[cont2] + aux[cont2 - 1];
-                smallId = cont2 - 1;
-            }
-        }
-        if (aux[k] + edge < small)
-            aux[k] = aux[k] + edge;
-        else{
-            aux[smallId] += aux[smallId + 1];
-            for (cont3 = smallId + 1; cont3 < k; cont3++)
-                aux[cont3] = aux[cont3 + 1];
-            aux[k] = edge;
-        }
-    }
-
-    larg = 0;
-    for (cont = 0; cont <= k; cont++)
-        if (aux[cont] > larg)
-            larg = aux[cont];
-    return larg;
+    PD_rec(dist, n, k, 0, 0, 0);
 }
 
 int main(){
     FILE* arqTeste;
     arqTeste = fopen("testes.txt","r");
     int t, cont;
-    fscanf(arqTeste,"%d",&t);
-    //scanf("%d", &t);
+    //fscanf(arqTeste,"%d",&t);
+    scanf("%d", &t);
     for (cont = 0; cont < t; cont++) {
         int n, k, cont2;
-        fscanf(arqTeste,"%d %d",&n, &k);
-        //scanf("%d %d", &n, &k);
+        //fscanf(arqTeste,"%d %d",&n, &k);
+        scanf("%d %d", &n, &k);
         int dist[n + 1];
-        /*for (cont2 = n; cont2 >= 0; cont2--){
+        for (cont2 = n; cont2 >= 0; cont2--){
             //fscanf(arqTeste,"%d",&aux);
-            //scanf("%d", &aux);
+            int aux;
+            scanf("%d", &aux);
+            dist[cont2] = aux;
+        }
+        /*for(cont2=0; cont2<=n; cont2++){
             dist[cont2] = cont2+1;
         }*/
-        for(cont2=0; cont2<=n; cont2++){
-            dist[cont2] = cont2+1;
-        }
 
+        //k = 6;
         printf("%d\t", PD(dist, n, k));
         //printf("%d\t", AG(dist, n, k));
-        //printf("%d\n", BF(dist, n, k));
+        printf("%d\n", BF(dist, n, k));
     }
     return 0;
 }
