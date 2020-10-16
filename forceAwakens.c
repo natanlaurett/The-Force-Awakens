@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-
+#include <string.h>
 /* ============== FUNÇÕES AUXILIARES ============== */
 int sumPosition(int vet[],int inicio, int fim){
     int value =0;
@@ -147,31 +147,26 @@ int PD(int *dist, int n, int k){
     return max[n][k];
 }
 
-int main(){
-    FILE* arqTeste;
-    arqTeste = fopen("testes.txt","r");
-    int t, cont;
-    fscanf(arqTeste,"%d",&t);
-    //scanf("%d", &t);
-    for (cont = 0; cont < t; cont++) {
-        int n, k, cont2;
-        fscanf(arqTeste,"%d %d",&n, &k);
-        //scanf("%d %d", &n, &k);
-        int dist[n + 1];
-        /*for (cont2 = n; cont2 >= 0; cont2--){
-            //fscanf(arqTeste,"%d",&aux);
+int main(int argc, char* argv[]){
+    int t;
+    scanf("%d", &t);
+    for (int cont = 0; cont < t; cont++) {
+        int n, k;
+        scanf("%d %d", &n, &k);
+        int* dist = malloc((n+1) *sizeof(int));
+
+        for(int cont2=0; cont2<=n; cont2++){
             int aux;
             scanf("%d", &aux);
             dist[cont2] = aux;
-        }*/
-        for(cont2=0; cont2<=n; cont2++){
-            dist[cont2] = cont2+1;
         }
-
-        k = 3;
-        printf("%d\t", PD(dist, n, k));
-        printf("%d\t", AG(dist, n, k));
-        printf("%d\n", BF(dist, n, k));
+        if(strcmp(argv[1],"PD")==0)
+            printf("%d\n", PD(dist, n, k));
+        else if(strcmp(argv[1],"AG")==0)
+            printf("%d\n", AG(dist, n, k));
+        else if(strcmp(argv[1],"BF")==0)
+            printf("%d\n", BF(dist, n, k));
+        free(dist);
     }
     return 0;
 }
