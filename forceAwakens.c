@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 /* ============== FUNÇÕES AUXILIARES ============== */
 int sumPosition(int vet[],int inicio, int fim){
@@ -79,27 +80,71 @@ int AG(int *dist, int n, int k){
     return max;
 }
 
-int PD_rec(int *dist, int n, int k, int aux, int max, int start){
-    if (start > n)
-        return max;
-    int res1, res2, arg;
-
-    aux += dist[start];
-    if (aux > max)
-        max = aux;
-    res1 = PD_rec(dist, n, k, aux, max, start + 1);
-
-    if (k > 0){
-        aux = 0;
-        res2 = PD_rec(dist, n, k - 1, aux, max, start + 1);
-        if (res2 < res1)
-            return res2;
-    }
-    return res1;
-}
-
 int PD(int *dist, int n, int k){
-    PD_rec(dist, n, k, 0, 0, 0);
+    int aux[n + 1][k + 1];
+    int max[n + 1][k + 1];
+    int cont1, cont2, cont3, cont4;
+    aux[0][0] = dist[0];
+    max[0][0] = dist[0];
+    for (cont1 = 1; cont1 <=n; cont1++){
+        aux[cont1][0] = aux[cont1 - 1][0] + dist[cont1]; 
+        max[cont1][0] = aux[cont1][0];
+    }
+
+    for (cont1 = 1; cont1 <= n; cont1++){
+        for (cont2 = 1; cont2 <= k; cont2++){
+            if (cont2 > cont1){
+                aux[cont1][cont2] = aux[cont1][cont2 - 1];
+                max[cont1][cont2] = max[cont1][cont2 - 1];
+                continue;
+            }
+            int maxesc = INT_MAX;
+            int auxesc = INT_MAX;
+            int auxIter, auxIter2, maxIter, distMax;
+            for (cont3 = cont2 - 1; cont3 < cont1; cont3++){
+                maxIter = max[cont3][cont2 - 1];
+                auxIter = aux[cont3][cont2 - 1];
+                distMax = aux[cont3][cont2 - 1];
+                for (cont4 = cont3 + 1; cont4 <= cont1; cont4++)
+                    distMax += dist[cont4];
+                for (cont4 = cont3 + 1; cont4 <= cont1; cont4++){
+                    auxIter2 = distMax - auxIter;
+                    if (auxIter2 > auxIter){
+                        if (auxIter2 > maxIter){
+                            if (auxIter2 < maxesc){
+                                maxesc = auxIter2;
+                                auxesc = auxIter2;
+                            }
+                        }else{
+                           if (maxIter < maxesc){
+                                maxesc = maxIter;
+                                auxesc = auxIter2;
+                            } 
+                        }
+                        
+                    }else{
+                        if (auxIter > maxIter){
+                            if (auxIter < maxesc){
+                                maxesc = auxIter;
+                                auxesc = auxIter2;
+                            }
+                        }else{
+                            if (maxIter < maxesc){
+                                maxesc = maxIter;
+                                auxesc = auxIter2;
+                            }
+                        }
+                        
+                    }
+                    auxIter += dist[cont4];
+                }  
+            }
+
+            aux[cont1][cont2] = auxesc;
+            max[cont1][cont2] = maxesc;
+        }
+    }
+    return max[n][k];
 }
 
 int main(){
@@ -123,7 +168,7 @@ int main(){
             dist[cont2] = cont2+1;
         }
 
-        k = 7;
+        k = 3;
         printf("%d\t", PD(dist, n, k));
         printf("%d\t", AG(dist, n, k));
         printf("%d\n", BF(dist, n, k));
