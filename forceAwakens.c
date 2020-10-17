@@ -153,6 +153,7 @@ int main(int argc, char* argv[]){
     for (int cont = 0; cont < t; cont++) {
         int n, k;
         scanf("%d %d", &n, &k);
+        if(n==0) break;
         int* dist = malloc((n+1) *sizeof(int));
 
         for(int cont2=0; cont2<=n; cont2++){
